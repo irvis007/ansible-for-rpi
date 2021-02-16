@@ -8,14 +8,6 @@
     - name: update apt cache
       apt: update_cache=yes cache_valid_time=43200
 
-#- import_playbook: systemsetup.yaml
-#- import_playbook: pihole.yaml
+- import_playbook: systemsetup.yaml
+- import_playbook: pihole.yaml
 - import_playbook: mopidy.yaml
-
-#
-# - name: Ansible Playbook for configuring Transmission and open VPN on Raspberry Pi
-#   hosts: rpi-pihole
-#   roles:
-#     - transmissionVpn
-#   remote_user: ubuntu
-#   become: yes
