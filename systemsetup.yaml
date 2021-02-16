@@ -1,0 +1,7 @@
+---
+- hosts: rpi
+  become: true
+  gather_facts: false
+  
+  roles:
+    - role: system-setup

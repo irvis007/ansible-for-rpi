@@ -1,0 +1,24 @@
+---
+# defaults file for mopidy
+
+mopidy_password: ''
+mopidy_hostname: "{{ raspberry_hostname }}"
+mopidy_media_dir: '/app/mopidy/media'
+
+#maybe not all python packages are necesary, to verify
+sys_packages: ['apt-transport-https','autoconf', 'gcc', 'python3', 'python3-pip', 'python-pip', 'python-setuptools', 'virtualenv']
+
+mopidy_packages: ['mopidy-podcast', 'mopidy-mpd', 'mopidy-local']
+mopidy_pip: ['mopidy-youtube', 'mopidy-radionet', 'mopidy-iris']
+
+# 'ini_file' module settings for mopidy.conf
+mopidy_settings:
+  - { section: 'mpd', option: 'password', value: '{{ mopidy_password }}' }
+  - { section: 'mpd', option: 'hostname', value: '0.0.0.0' }
+  - { section: 'local', option: 'media_dir', value: '{{ mopidy_media_dir }}' }
+  - { section: 'youtube', option: 'enabled', value: 'true' }
+  - { section: 'http', option: 'hostname', value: '0.0.0.0' }
+  - { section: 'radionet', option: 'enabled', value: 'true' }
+  - { section: 'radionet', option: 'language', value: 'pl' }
+  - { section: 'radionet', option: 'min_bitrate', value: '96' }
+  - { section: 'radionet', option: 'favorite_stations', value: 'https://www.radio.net/s/worl' }

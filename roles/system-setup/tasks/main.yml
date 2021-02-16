@@ -1,0 +1,12 @@
+---
+- name: INCLUDE | users groups and roles
+  include: users.yaml
+
+- name: INCLUDE | ssh configuration
+  include_tasks: ssh.yaml
+
+- name: INCLUDE | apt refresh, update and install packages
+  include_tasks: apt.yaml
+
+# - name: INCLUDE | set up hostname, timezone and firewall
+#   include_tasks: ufw.yaml

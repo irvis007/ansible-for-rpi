@@ -1,0 +1,6 @@
+---
+# handlers file for mopidy
+- name: restart mopidy
+  service:
+    name: mopidy
+    state: restarted

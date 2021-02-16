@@ -1,0 +1,51 @@
+---
+
+- name: Set hostname
+  command: hostname "{{ raspberry_hostname }}"
+
+- name: set timezone to Europe/Warsaw
+  community.general.timezone:
+    name: Europe/Warsaw
+    
+# run aptitude safe-upgrade
+- name: Upgrade APT to the lastest packages
+  action: apt upgrade=safe
+
+# installing unattended-upgrades
+- name: Install unattended-upgrades
+  action: apt pkg=unattended-upgrades state=present
+
+# install tools
+- name: Install  tools
+  apt:
+    package: ['tmux', 'sysstat', 'mc', 'net-tools']
+    state: present
+
+# set up auto-update
+- name: Adjust APT update intervals
+  template: src=10periodic dest=/etc/apt/apt.conf.d/10periodic
+
+###  removing old kernel versions
+- name: Regitering previous kernel versions to be removed.
+  shell: dpkg-query -W -f'${Package}\n' 'linux-*' | sed -nr 's/.*-([0-9]+(\.[0-9]+){2}-[^-]+).*/\1 &/p' | sort -k 1,1V | awk '($1==c){exit} {print $2}' c=$(uname -r | cut -f1,2 -d-)
+  register: old_kernel_packages
+  changed_when: false
+- name: Remove packages of previous kernel versions.
+  apt:
+    name: "{{ old_kernel_packages.stdout }}"
+    state: absent
+    purge: yes
+    autoremove: yes
+
+- name : Remove unused dependencies
+  apt: autoremove=true
+
+- name : Clean Up Cache
+  apt: autoclean=true
+
+- name: Refresh certs, useful while downloading over https
+  command: update-ca-certificates --fresh
+
+- name: Wait for server to restart
+  reboot:
+    reboot_timeout: 3600

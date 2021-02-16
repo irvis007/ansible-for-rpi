@@ -1,0 +1,14 @@
+---
+# tasks file for mopidy
+
+- name: INCLUDE | Install system packages
+  include: syspcgks.yaml
+
+- name: INCLUDE | Install mopidy
+  include: mpcgks.yaml
+
+- name: INCLUDE | Install python packages
+  include: pypcgks.yaml
+
+- name: INCLUDE | Configure mopidy
+  include: confmopidy.yaml

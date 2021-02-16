@@ -1,0 +1,39 @@
+---
+# UFW not for internal home network
+# need more development for server use
+
+# - name: Set up default policy, deny all on incomming
+#   ufw:
+#     policy: deny
+#     direction: incoming
+#
+# - name: Allow incomming traffic from local network
+#   ufw:
+#     state: disabled
+#     rule: allow
+#     src: '{{ item }}'
+#   with_items:
+#     - 192.168.0.0/24
+#
+# - name: Start and enable ufw
+#   ufw:
+#     state: disabled
+#
+# ## either disable
+# - name: Disable IPv6 with sysctl
+#   sysctl: name={{ item }} value=1 state=present reload=yes
+#   with_items:
+#     - net.ipv6.conf.all.disable_ipv6
+#     - net.ipv6.conf.default.disable_ipv6
+#     - net.ipv6.conf.lo.disable_ipv6
+#
+# - name: Debian | blacklist ipv6 in modprobe
+#   lineinfile:
+#     dest: /etc/modprobe.d/blacklist.conf
+#     line: 'blacklist ipv6'
+#     mode: '0644'
+#     create: yes
+# 
+# - name: server restart
+#   reboot:
+#     reboot_timeout: 3600

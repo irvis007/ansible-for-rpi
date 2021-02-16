@@ -1,0 +1,15 @@
+---
+# vars file for system-setup
+
+#users to be created with tasks/users.yml
+username: [ 'pihole', 'openvpn', 'rpiusr', 'mopidy' ]
+
+#key to be used for later users authentication to remote host,
+#place them in files folder
+copy_local_key: "{{ lookup('file', 'ansible_id_rsa.pub') }}"
+
+#system packages to be installed with tasks/apt.yml
+sys_packages: [ 'curl', 'git', 'tmux' ]
+
+#ssh port to be set by tasks/ssh.yml
+configured_port: 2279

@@ -1,0 +1,47 @@
+---
+
+- name: "Download Pi-Hole installer"
+  get_url:
+      url: https://install.pi-hole.net
+      dest: ~/install-pihole.sh
+      mode: 0740
+  tags: pihole
+
+- name: Create pihole configuration directory
+  file:
+    name="{{ fspath_pihole_config }}"
+    state=directory
+    owner="{{ user_pihole }}"
+    group="{{ group_pihole }}"
+    mode=0740
+  tags: pihole
+  become: true
+
+- name: Create pihole configuration
+  template:
+    src="setupVars.conf.j2"
+    dest="{{ fspath_pihole_config }}/setupVars.conf"
+    owner=root
+    group=root
+    mode=0644
+  tags: pihole
+
+- name: Install Pi-Hole
+  shell: "export PIHOLE_SKIP_OS_CHECK=true && nohup ~/install-pihole.sh --unattended >> /var/log/unnattended-pihole-install.log 2>&1 &"
+  register: dbg_install_pihole
+  tags: pihole
+
+- name: Set PiHole to update every week
+  ansible.builtin.cron:
+    name: pihole autoupdate
+    weekday: "6"
+    minute: "0"
+    hour: "17"
+    user: pihole
+    job: "pihole -up && pihole -g"
+    state: present
+  tags: admin
+
+- name: change default pihole port to custom "{{ custom_pihole_port }}" http port
+  template: src=external.conf.j2 dest=/etc/lighttpd/external.conf mode=0644
+  notify: Restart lighttpd

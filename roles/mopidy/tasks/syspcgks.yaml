@@ -1,0 +1,4 @@
+- name: Install system packages
+  apt:
+    name: "{{ sys_packages }}"
+    state: present

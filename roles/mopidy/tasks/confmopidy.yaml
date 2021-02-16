@@ -1,0 +1,32 @@
+
+
+- name: Create a media direcory if it does not exist
+  ansible.builtin.file:
+    path: "{{ mopidy_media_dir }}"
+    state: directory
+    mode: '0755'
+    owner: mopidy
+
+- name: Create a lib direcory if it does not exist
+  ansible.builtin.file:
+    path: /var/lib/mopidy
+    state: directory
+    mode: '0755'
+    owner: mopidy
+
+- name: Create mopidy.conf file 
+  ini_file:
+    dest: /etc/mopidy/mopidy.conf
+    section: "{{ item.section }}"
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    owner: mopidy
+    state: present
+  with_items: "{{ mopidy_settings }}"
+  notify: restart mopidy
+
+- name: Ensure mopidy service is started
+  service:
+    name: mopidy
+    state: started
+    enabled: yes

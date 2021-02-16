@@ -1,0 +1,7 @@
+---
+
+- name: Install external extensions
+  pip:
+    name: "{{ mopidy_pip }}"
+    state: present
+  notify: restart mopidy

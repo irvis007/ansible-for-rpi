@@ -1,0 +1,29 @@
+---
+
+- name: Trust mopidy developer GPG key
+  apt_key:
+    url: https://apt.mopidy.com/mopidy.gpg
+    state: present
+
+- name: Ensure mopidy repository is available
+  apt_repository:
+    repo: deb https://apt.mopidy.com/ buster main contrib non-free
+    state: present
+
+- name: Update apt cache
+  apt: update_cache=yes
+  changed_when: False
+
+- name: Ensure mopidy is installed
+  apt:
+    name: mopidy
+    state: present
+
+- name: Install mopidy packages
+  apt:
+    name: "{{ mopidy_packages }}"
+    state: present
+
+- name: Install gstreamer plugin(s)
+  apt: name=gstreamer1.0-plugins-bad state=present
+  notify: restart mopidy

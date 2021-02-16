@@ -1,0 +1,34 @@
+## >> Preventing root from direct ssh
+- name: Disable password authentication for root
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: '^PermitRootLogin'
+    line: 'PermitRootLogin no'
+
+- name: Disable password authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: '^PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+
+- name: Disable X11Forwarding
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: '^X11Forwarding'
+    line: 'X11Forwarding no'
+
+- name: Disable empty password login
+  lineinfile:
+    dest: "{{ sshd_config }}"
+    regexp: '^#?PermitEmptyPasswords'
+    line: 'PermitEmptyPasswords no'
+
+- name: Setup alternate SSH port to "{{ ansible_port }}"
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^Port"
+    line: "Port {{ configured_port }}"
+  notify: "Restart sshd"

@@ -1,0 +1,27 @@
+## >> Create and configure users and groups
+- name: Make sure we have a 'wheel' group
+  group:
+    name: wheel
+    state: present
+
+- name: Allow 'wheel' group to have passwordless sudo
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: '/usr/sbin/visudo -cf %s'
+
+- name: Create a new regular user "{{ item.username }}" with sudo privileges
+  user:
+    name: "{{ item }}"
+    groups: wheel
+    shell: /bin/bash
+  with_items: "{{ username }}"
+
+- name: Set authorized key for {{ item.username }} user
+  authorized_key:
+    user: "{{ item }}"
+    state: present
+    key: "{{ copy_local_key }}"
+  with_items: "{{ username }}"

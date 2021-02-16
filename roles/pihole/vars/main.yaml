@@ -1,0 +1,21 @@
+---
+# Source: https://github.com/fheinle/ansible-pihole/blob/master/defaults/main.yml
+user_pihole: "pihole"
+group_pihole: "pihole"
+
+
+fspath_web_interface: "/var/www/admin"
+fspath_web_directory: "/var/www/pihole"
+fspath_pihole: "/opt/pihole"
+fspath_pihole_src: "/etc/.pihole"
+fspath_pihole_config: "/etc/pihole"
+
+#reading facts about network and set up vars
+gateway_ip: "{{  ansible_default_ipv4.gateway }}"
+network_interface: "{{  ansible_default_ipv4.interface }}"
+ipv4_address: "{{ ansible_default_ipv4.address }}"
+ipv6: False
+dns_servers:
+  - "208.67.222.222"
+  - "77.88.8.8"
+custom_pihole_port: 5058
